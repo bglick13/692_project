@@ -4,3 +4,9 @@
 *.lua
 
 *.pickle
+
+*.pdf
+
+*.png
+
+*.log
