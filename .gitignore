@@ -4,3 +4,7 @@
 *.lua
 
 *.pickle
+
+*.log
+
+draft/__pycache__/

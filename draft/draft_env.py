@@ -34,9 +34,9 @@ class CaptainModeDraft:
         self.next_pick_index = 0
         self.heros = heros
         self.port = port
-        self.SEP = heros.loc[heros['name'] == 'SEP', 'model_id'].values[0]
-        self.MASK = heros.loc[heros['name'] == 'MASK', 'model_id'].values[0]
-        self.CLS = heros.loc[heros['name'] == 'CLS', 'model_id'].values[0]
+        self.SEP = 118
+        self.MASK = 117
+        self.CLS = 119
         self.state = DraftState(np.ones(25) * self.MASK, self.next_pick_index, self.port, heros)
 
     def reset(self):
@@ -64,10 +64,10 @@ class DraftState(ABC):
         self.game_state = state
         self.next_pick_index = next_pick_index
 
-        self.heros = heros
-        self.SEP = heros.loc[heros['name'] == 'SEP', 'model_id'].values[0]
-        self.MASK = heros.loc[heros['name'] == 'MASK', 'model_id'].values[0]
-        self.CLS = heros.loc[heros['name'] == 'CLS', 'model_id'].values[0]
+        self.heros = copy.deepcopy(heros)
+        self.SEP = 118
+        self.MASK = 117
+        self.CLS = 119
 
         self.draft_order = np.array([1, 13, 2, 14, 3, 15,
                                      4, 16, 5, 17,
@@ -195,13 +195,13 @@ class DraftState(ABC):
             pickle.dump(config, f)
         client = docker.from_env()
         assert os.path.isdir(local_volume), 'Incorrect mount point'
-        job_number = self.port - 13337
+        job_number = (self.port - 13337) % 4
         cpus = f'{job_number*2}-{job_number*2+1}'
         print(f'Job number {job_number} working on cpus {cpus}')
         container = client.containers.run('dotaservice',
                                           volumes={local_volume: {'bind': '/tmp', 'mode': 'rw'}},
                                           # ports={f'{self.port}/tcp': self.port},
-                                          cpuset_cpus=cpus,
+                                          # cpuset_cpus=cpus,
                                           cpu_period=50000,
                                           cpu_quota=49900,
                                           remove=True,
