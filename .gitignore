@@ -5,6 +5,12 @@
 
 *.pickle
 
+*.pdf
+
+*.png
+
+*.log
+
 *.log
 
 draft/__pycache__/
