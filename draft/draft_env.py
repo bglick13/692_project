@@ -15,7 +15,7 @@ except ModuleNotFoundError:
 import uuid
 import pickle
 import docker
-from spython import Client
+from spython.main import Client
 import copy
 import logging
 import re
