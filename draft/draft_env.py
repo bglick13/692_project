@@ -184,7 +184,7 @@ class DraftState(ABC):
         # Reset and obtain the initial observation. This dictates who we are controlling,
         # this is done before the player definition, because there might be humand playing
         # that take up bot positions.
-        local_volume = f'../rollout_results'
+        local_volume = f'rollout_results'
         local_volume = os.path.dirname(os.path.abspath(local_volume))
         local_volume = os.path.join(local_volume, 'rollout_results')
         # if not os.path.isdir(local_volume):
@@ -221,7 +221,7 @@ class DraftState(ABC):
         config = self._get_game_config()
         client = docker.from_env()
         container = self._play(config=config, game_id=game_id)
-        local_volume = f'/rollout_results'
+        local_volume = f'rollout_results'
         local_volume = os.path.dirname(os.path.abspath(local_volume))
         local_volume = os.path.join(local_volume, 'rollout_results')
         local_volume = os.path.join(local_volume, game_id)
