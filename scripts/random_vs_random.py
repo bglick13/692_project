@@ -52,7 +52,7 @@ if __name__ == '__main__':
     n_games = 32
     port = 13337
     verbose = True
-    hero_ids = pd.read_json('../const/draft_bert_hero_ids.json', orient='records').dropna()
+    hero_ids = pd.read_json('/const/draft_bert_hero_ids.json', orient='records').dropna()
     ray.init(num_cpus=n_jobs, ignore_reinit_error=True)
 
     start = time.time()

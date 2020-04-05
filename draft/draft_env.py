@@ -221,7 +221,7 @@ class DraftState(ABC):
         config = self._get_game_config()
         client = docker.from_env()
         container = self._play(config=config, game_id=game_id)
-        local_volume = f'../rollout_results'
+        local_volume = f'/rollout_results'
         local_volume = os.path.dirname(os.path.abspath(local_volume))
         local_volume = os.path.join(local_volume, 'rollout_results')
         local_volume = os.path.join(local_volume, game_id)
