@@ -200,7 +200,7 @@ class DraftState(ABC):
         # cpus = f'{job_number*2}-{job_number*2+1}'
         # print(f'Job number {job_number} working on cpus {cpus}')
         options = [("--bind", f'{local_volume}:/tmp')]
-        instance = Client.instance('dotaservice', options=options)
+        instance = Client.instance('docker://dotaservice', options=options)
         print(instance)
         # container = client.containers.run('dotaservice',
         #                                   volumes={local_volume: {'bind': '/tmp', 'mode': 'rw'}},
