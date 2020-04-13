@@ -2,14 +2,13 @@ import pickle
 import time
 from collections import deque
 from multiprocessing import Pool
-import ray
+
 import numpy as np
 import pandas as pd
 
 from draft.draft_env import CaptainModeDraft
 
 
-@ray.remote
 def do_rollout(hero_ids, port, verbose=False):
 
     draft = CaptainModeDraft(hero_ids, port)
@@ -48,21 +47,16 @@ def do_rollout(hero_ids, port, verbose=False):
 
 if __name__ == '__main__':
     memory_size = 500000
-    n_jobs = 8
+    n_jobs = 2
     n_games = 8
     port = 13337
     verbose = True
-    hero_ids = pd.read_json('const/draft_bert_hero_ids.json', orient='records').dropna()
-    ray.init(num_cpus=n_jobs, ignore_reinit_error=True)
+    hero_ids = pd.read_json('const/draft_bert_hero_ids.json', orient='records')
+
 
     start = time.time()
-    all_ret = []
-    for game in range(n_games):
-        ret = do_rollout.remote(hero_ids, port + game)
-        all_ret.append(ret)
-    all_ret = ray.get(all_ret)
-    # for batch_of_games in range(n_games // n_jobs):
-    #     # pool = ProcessPoolExecutor(2)
-    #     pool = Pool(n_jobs)
-    #     results = pool.starmap(do_rollout, [(hero_ids, port + i) for i in range(n_jobs)])
+    for batch_of_games in range(n_games // n_jobs):
+        # pool = ProcessPoolExecutor(2)
+        pool = Pool(n_jobs)
+        results = pool.starmap(do_rollout, [(hero_ids, port + i) for i in range(n_jobs)])
     print(f'Played {n_games} games using {n_jobs} jobs in {time.time() - start}s')

@@ -194,25 +194,25 @@ class DraftState(ABC):
         config.game_id = game_id
         with open(f'{local_volume}/config.pickle', 'wb') as f:
             pickle.dump(config, f)
-        # client = docker.from_env()
+        client = docker.from_env()
         assert os.path.isdir(local_volume), 'Incorrect mount point'
-        # job_number = (self.port - 13337) % 4
-        # cpus = f'{job_number*2}-{job_number*2+1}'
-        # print(f'Job number {job_number} working on cpus {cpus}')
+        job_number = (self.port - 13337) % 4
+        cpus = f'{job_number*2}-{job_number*2+1}'
+        print(f'Job number {job_number} working on cpus {cpus}')
         options = ["--bind", f'{local_volume}:/tmp']
-        instance = Client.instance('docker://dotaservice', options=options)
-        print(instance)
-        # container = client.containers.run('dotaservice',
-        #                                   volumes={local_volume: {'bind': '/tmp', 'mode': 'rw'}},
-        #                                   # ports={f'{self.port}/tcp': self.port},
-        #                                   # cpuset_cpus=cpus,
-        #                                   cpu_period=50000,
-        #                                   cpu_quota=49900,
-        #                                   remove=True,
-        #                                   detach=True)
+        #instance = Client.instance('docker://dotaservice', options=options)
+        #print(instance)
+        container = client.containers.run('dotaservice',
+                                           volumes={local_volume: {'bind': '/tmp', 'mode': 'rw'}},
+                                           ports={f'{self.port}/tcp': self.port},
+                                           #cpuset_cpus=cpus,
+                                           cpu_period=50000,
+                                           cpu_quota=49900,
+                                           remove=True,
+                                           detach=True)
         logger.debug('launched container')
         # client.close()
-        return instance
+        return container
 
     def get_winner(self):
         assert self.done, 'Draft is not complete'
